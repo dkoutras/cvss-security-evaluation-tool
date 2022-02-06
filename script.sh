@@ -5,6 +5,7 @@ echo "information neededfor base score production ... initializing"
 rm serverInfo.txt
 nmap -A -sV -T5 -p- --version-all "$1" >> serverInfo.txt
 
+rm Domain.txt
 cat serverInfo.txt | grep 'open  domain' | cut -d ' ' -f 8-10  --output-delimiter=+ >> Domain.txt
 
 rm Smtp.txt
