@@ -109,7 +109,7 @@ def baseEnvScoreCalc(impactListCIA):
         elif ('AV:L' in cveVector):
             MAV = 'AV:L'
         else:
-            MAV = 'AV:P'
+            MAV = 'AV:P' 
 
         print("\nBase Score:")
         print(baseScore) 
@@ -135,8 +135,11 @@ def baseEnvScoreCalc(impactListCIA):
         #driver.minimize_window()
         
         print("\nEnvironmental Score:")
-        print(environmentalScoreNumber.text)
-        print(environmentalScoreSeverity.text)
+        try:
+            print(environmentalScoreNumber.text)
+            print(environmentalScoreSeverity.text)
+        except Exception as e:
+            print(str(e))
     
 def securityScoreCalc(impactList):
     scoreDict = {"H" : 0.4, "L" : 0.2, "N" : 0.0}
@@ -147,7 +150,7 @@ def securityScoreCalc(impactList):
                 print(scoreDict[key])
                 securityScore += scoreDict[key]
     except Exception as e:
-        print(e)
+        print(str(e))
     return round(securityScore, 1)
      
 def ciaTableProduction(impactList):
@@ -172,6 +175,10 @@ def ciaTableProduction(impactList):
         smtpTableStrangePort[0] = 'N'
         smtpTableStrangePort[1] = 'H'
         smtpTableStrangePort[2] = 'H'
+    elif impactList[1] == 'L':
+        smtpTableStrangePort[0] = 'N'
+        smtpTableStrangePort[1] = 'L'
+        smtpTableStrangePort[2] = 'L'
         
     if impactList[2] == 'N':
         smtpTableEnum[0] = 'N'
@@ -193,59 +200,63 @@ def ciaTableProduction(impactList):
     print(smtpAttacks)
     return smtpAttacks
 
-def parseOutputTxt(dict1, dict2, dict3):   
+def parseOutputTxt(dict1, dict2, dict3, fileNames):   
     # opening 3 text files
-    openRelayOut = open("openRelayOut.txt", "r")
-    strangePortOut = open("strangePortOut.txt", "r")
-    enumOut = open("enumOut.txt", "r")
+    file1 = open(fileNames[0], "r")
+    file2 = open(fileNames[1], "r")
+    file3 = open(fileNames[2], "r")
     # read each file's content
-    readOpenRelayOut = openRelayOut.read()
-    readStrangePortOut = strangePortOut.read()
-    readEnumOut = enumOut.read()
-    resultOpenRelay = ""
-    resultStrangePort = ""
-    resultEnum = ""
+    readFile1 = file1.read()
+    readFile2 = file2.read()
+    readFile3 = file3.read()
+    resultFile1 = ""
+    resultFile2 = ""
+    resultFile3 = ""
     try:
         for key1 in dict1.keys(): 
-            if key1 in readOpenRelayOut: 
-                print('\nString', key1, 'Found In File')
-                resultOpenRelay += dict1[key1]
+            if key1 in readFile1: 
+                print('\nString', key1, 'found in file', fileNames[0])
+                resultFile1 += dict1[key1]
             else: 
-                print('\nString', key1 , 'Not Found\n') 
+                print('\nString', key1 , 'not found in file', fileNames[0],'\n') 
                 
         for key2 in dict2.keys(): 
-            if key2 in readStrangePortOut: 
-                print('\nString', key2, 'Found In File')
-                resultStrangePort += dict2[key2]
-                if resultStrangePort == 'H': break
+            if key2 in readFile2: 
+                print('\nString', key2, 'found in file', fileNames[1])
+                resultFile2 += dict2[key2]
+                if resultFile2 == 'H': break
             else: 
-                print('\nString', key2 , 'Not Found\n')
+                print('\nString', key2 , 'not found in file', fileNames[1],'\n')
         #if keys not in dict get N
-        if resultStrangePort == "" : resultStrangePort = 'N'
+        if resultFile2 == "" : resultFile2 = 'N'
 
         for key3 in dict3.keys(): 
-            if key3 in readEnumOut: 
-                print('\nString', key3, 'Found In File')
-                resultEnum += dict3[key3]
+            if key3 in readFile3: 
+                print('\nString', key3, 'found in file', fileNames[2])
+                resultFile3 += dict3[key3]
             else: 
-                print('\nString', key3 , 'Not Found\n')
+                print('\nString', key3 , 'not found in file', fileNames[2],'\n')
+        if (resultFile3 == "LN" or resultFile3 == "LNN") : resultFile3 = "N"
+        if (resultFile3 == "LL" or resultFile3 == "LNL" or resultFile3 == "NL") : resultFile3 = "L"
     except Exception as e:
         print(str(e))
     # closing the files
-    enumOut.close() 
-    openRelayOut.close()
-    strangePortOut.close()
-    resultSmtp = [resultOpenRelay, resultStrangePort, resultEnum]
-    return resultSmtp
+    file1.close()
+    file2.close()
+    file3.close() 
+    resultProtocol = [resultFile1, resultFile2, resultFile3]
+    return resultProtocol
 
 if __name__ == "__main__":
     argumentList = sys.argv[1:]
     options = "s:f:t:a:h"
     long_options = ["smtp =", "ftp =", "http =", "all ="]
-    dictSmtpOpenRelay = {"Server is an open relay" : "H", "Server doesn't seem to be an open relay" : "N", "closed smtp" : "N"}
-    dictSmtpStrangePort = {"unusual port: possible malware" : "H", "open  unknown" : "H"} 
-    dictSmtpEnum = {"|_  " : "L", "unhandled status" : "N", "closed smtp" : "N"} # TODO: FIX Later
-    dictFtp = {}
+    dictSmtpOpenRelay = {"Server is an open relay" : "H", "Server doesn't seem to be an open relay" : "N"}
+    dictSmtpStrangePort = {"unusual port: possible malware" : "H", "open  unknown" : "L"} 
+    dictSmtpEnum = {"|_  " : "L", "Couldn't find" : "N", "unhandled status" : "L"} 
+    dictFtpAnon = {"Anonymous FTP login allowed" : "H"}
+    dictFtpBounce = {"bounce working!" : "H"}
+    dictFtpBrute = {}
     dictHttp = {}
     try: 
         arguments, values = getopt.getopt(argumentList, options, long_options)
@@ -253,11 +264,12 @@ if __name__ == "__main__":
         for currentArgument, currentValue in arguments:
             try:
                 if currentArgument in ("-s", "--smtp"):
+                    smtpFileNames = ["openRelayOut.txt", "strangePortOut.txt", "enumOut.txt"]
                     print ("SMTP")
                     print (("IP is: % s") % (currentValue))
-                    processSmtp = subprocess.Popen(["script.sh", currentValue], shell=True)
+                    processSmtp = subprocess.Popen(["scriptSMTP.sh", currentValue], shell=True)
                     processSmtp.wait()
-                    smtpImpactList = parseOutputTxt(dictSmtpOpenRelay, dictSmtpStrangePort, dictSmtpEnum)
+                    smtpImpactList = parseOutputTxt(dictSmtpOpenRelay, dictSmtpStrangePort, dictSmtpEnum, smtpFileNames)
                     securityScore = securityScoreCalc(smtpImpactList)
                     print("\nThe impact of the attacks in the smtp server is ")
                     print(smtpImpactList)
@@ -270,16 +282,18 @@ if __name__ == "__main__":
                     else:
                         print("\nSecurity is weak")
                 elif currentArgument in ("-f", "--ftp"):
+                    ftpFileNames = ["anonOut.txt", "bounceOut.txt", "bruteOut.txt"]
                     print ("FTP")
                     print (("IP is: % s") % (currentValue))
-                    processFtp = subprocess.Popen(["script.sh", currentValue], shell=True)
+                    processFtp = subprocess.Popen(["scriptFTP.sh", currentValue], shell=True)
                     processFtp.wait()
-                    ftpImpactList = parseOutputTxt(dictFtp)
+                    ftpImpactList = parseOutputTxt(dictFtpAnon, dictFtpBounce, dictFtpBrute, ftpFileNames)
+                    print("\nThe impact of the attacks in the ftp server is ")
                     print(ftpImpactList)
                 elif currentArgument in ("-t", "--http"):
                     print ("HTTP")    
                     print (("IP is: % s") % (currentValue))
-                    processHttp = subprocess.Popen(["script.sh", currentValue], shell=True)
+                    processHttp = subprocess.Popen(["scriptHTTP.sh", currentValue], shell=True)
                     processHttp.wait()
                     httpImpactList = parseOutputTxt(dictHttp)
                     print(httpImpactList)

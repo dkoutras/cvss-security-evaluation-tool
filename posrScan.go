@@ -1,15 +1,15 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"net"
 	"sync"
-	"flag"
 )
 
 func main() {
 	var ip string
-	flag.StringVar(&ip, "ip", "192.168.1.2", "default is 192.168.1.2")
+	flag.StringVar(&ip, "ip", "192.168.1.13", "default is 192.168.1.13")
 	flag.Parse()
 	fmt.Printf("ip = %s\n", ip)
 	var wg sync.WaitGroup
@@ -19,7 +19,7 @@ func main() {
 			defer wg.Done()
 			val := ""
 			//fmt.Printf("ipINside = %s\n", ip)
-			address := fmt.Sprintf("%s:%d" ,ip, j)
+			address := fmt.Sprintf("%s:%d", ip, j)
 			//fmt.Printf("Addinside = %s\n", address)
 			conn, err := net.Dial("tcp", address)
 			if err != nil {

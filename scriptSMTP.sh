@@ -20,20 +20,20 @@ then
 	echo "Checking for enum-users"
 	read -p "put the name of the username's worlist .txt file e.g <wordlist.txt> " username
 	rm enumOut.txt
-	nmap --script smtp-enum-users.nse --script-args userdb=$username -p 25,80,2525,8080 "$1" >> enumOut.txt
+	nmap --script smtp-enum-users.nse --script-args userdb=$username -p- "$1" >> enumOut.txt
 	echo "enum works"
-	sleep 5
+	sleep 2
 elif [ $mode == 'd' ] ;
 then 
 	echo "smtp default mode"
 	echo "Checking for enum-users"
 	rm enumOut.txt
-	nmap --script smtp-enum-users.nse -p 25,80,2525,8080 "$1" >> enumOut.txt
+	nmap --script smtp-enum-users.nse -p- "$1" >> enumOut.txt
 	echo "enum works"
-	sleep 5
+	sleep 2
 else
 	echo "sou eipa ti na grapseis"
-	sleep 5
+	sleep 2
 fi
 
 rm strangePortOut.txt
@@ -44,8 +44,8 @@ nmap -sV -T5 -p- --script=smtp-strangeport "$1" >> strangePortOut.txt
 echo "strangePort works"	
 
 rm openRelayOut.txt
-nmap --script smtp-open-relay.nse -p 25,80,2525,8080 "$1" >> openRelayOut.txt
+nmap --script smtp-open-relay.nse -p- "$1" >> openRelayOut.txt
 	
 echo "openRelay"
 
-sleep 10
+sleep 2
