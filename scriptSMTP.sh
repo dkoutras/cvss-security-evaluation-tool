@@ -32,7 +32,7 @@ then
 	echo "enum works"
 	sleep 2
 else
-	echo "sou eipa ti na grapseis"
+	echo "press -h for help"
 	sleep 2
 fi
 
