@@ -6,13 +6,14 @@ rm serverInfo.txt
 nmap -A -sV -T5 -p- --version-all "$1" >> serverInfo.txt
 
 rm Domain.txt
-cat serverInfo.txt | grep 'open  domain' | cut -d ' ' -f 8-10  --output-delimiter=+ >> Domain.txt
-
+#cat serverInfo.txt | grep 'open  domain' | cut -d ' ' -f 8-10  --output-delimiter=+ >> Domain.txt
+cat serverInfo.txt | grep 'open  domain ' | awk -F'open  domain  ' '{print $2}' | cut -f1 -d"(" >> Domain.txt
+sed -i 's/ /+/g' Domain.txt && sed 's/.$//' Domain.txt
 rm Smtp.txt
 cat serverInfo.txt | grep 'open  smtp' | cut -d ' ' -f 8 >> Smtp.txt
 echo "Information extracted for environmental score production ... loading"
 
-read -p "press d for default mode or w for wordlist mode(u have to put a wordilist) " mode
+read -p "press d for default mode or w for wordlist mode (u have to put a wordlist) " mode
 
 if [ $mode == 'w' ] ;
 then
@@ -32,7 +33,7 @@ then
 	echo "enum works"
 	sleep 2
 else
-	echo "sou eipa ti na grapseis"
+	echo "Run again the tool wirh -h for help"
 	sleep 2
 fi
 
@@ -48,4 +49,4 @@ nmap --script smtp-open-relay.nse -p- "$1" >> openRelayOut.txt
 	
 echo "openRelay"
 
-sleep 2
+sleep 1
