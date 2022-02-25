@@ -35,6 +35,8 @@ then
 else
 	echo "Run again the tool wirh -h for help"
 	sleep 1
+	echo "press -h for help"
+	sleep 2
 fi
 
 rm strangePortOut.txt
