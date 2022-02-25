@@ -23,7 +23,7 @@ then
 	rm enumOut.txt
 	nmap --script smtp-enum-users.nse --script-args userdb=$username -p- "$1" >> enumOut.txt
 	echo "enum works"
-	sleep 2
+	sleep 1
 elif [ $mode == 'd' ] ;
 then 
 	echo "smtp default mode"
@@ -31,10 +31,10 @@ then
 	rm enumOut.txt
 	nmap --script smtp-enum-users.nse -p- "$1" >> enumOut.txt
 	echo "enum works"
-	sleep 2
+	sleep 1
 else
 	echo "Run again the tool wirh -h for help"
-	sleep 2
+	sleep 1
 fi
 
 rm strangePortOut.txt
