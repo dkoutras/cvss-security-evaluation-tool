@@ -407,8 +407,50 @@ def parseOutputFtpTxt(dictFtpAnon, dictFtpBounce, dictFtpFirewall, ftpFileNames)
     return ftpImpactList
 
 def parseOutputHttpTxt(dictHttpSsl, dictHttpCert, dictHttpRef, httpFileNames):
-    # TODO: name threats, copy paste the code above and make changes
-    print("Hello")
+    # opening 3 text files
+    fileSsl = open(httpFileNames[0], "r")
+    fileCert = open(httpFileNames[1], "r")
+    fileRef = open(httpFileNames[2], "r")
+    # read each file's content
+    readfileSsl = fileSsl.read()
+    readfileCert = fileCert.read()
+    readfileRef = fileRef.read()
+    resultfileSsl = ""
+    resultfileCert = ""
+    resultfileRef = ""
+    try:
+        for key1 in dictHttpSsl.keys(): 
+            if key1 in readfileSsl: 
+                print('\nString', key1, 'found in file', httpFileNames[0])
+                resultfileSsl += dictHttpSsl[key1]
+            else: 
+                print('\nString', key1 , 'not found in file', httpFileNames[0],'\n') 
+        if resultfileSsl == 'NN' : resultfileSsl = 'N'
+
+        for key2 in dictHttpCert.keys(): 
+            if key2 in readfileCert: 
+                print('\nString', key2, 'found in file', httpFileNames[1])
+                resultfileCert += dictHttpCert[key2]
+
+        for key3 in dictHttpRef.keys(): 
+            if key3 in readfileRef: 
+                print('\nString', key3, 'found in file', httpFileNames[2])
+                resultfileRef += dictHttpRef[key3] 
+
+        if resultfileSsl == '' : resultfileSsl = 'N'
+        if resultfileCert == '' : resultfileCert = 'N'
+        if resultfileRef == '' : resultfileRef = 'N'
+    except Exception as e:
+        print(str(e))
+    # closing the files
+    fileSsl.close()
+    fileCert.close()
+    fileRef.close() 
+    #handle the N N N with a message 
+    if (readfileSsl == "N" and resultfileCert == "N" and resultfileRef == "N"): 
+        print("\nYour system has no vulnerabilities that are related to Ssl and certificates. So, the system's environmental score may be '0'.\nThis score may be fictitious because your system may be exposed to other attacks not colnsidered in this version of the tool.")
+    httpImpactList = [readfileSsl, resultfileCert, resultfileRef]
+    return httpImpactList
 
 if __name__ == "__main__":
     argumentList = sys.argv[1:]
@@ -425,10 +467,10 @@ if __name__ == "__main__":
     dictFtpBounce = {"bounce working!" : "L"}
     dictFtpFirewall = {"Firewall vulnerable to bypass" : "H", "Failed to resolve" : "N"}
 
-    #HTTP THREAT LIST # TODO: complete and rename the dictionaries
-    dictHttpRef = {"Couldn't find any cross-domain scripts" : "N", "Spidering limited to" : "L"}
+    #HTTP THREAT LIST # 
     dictHttpSsl = {"closed https" : "H", "SSLv2 supported" : "L", "TLSv1.0:" : "N", "TLSv1.2:" : "N"}
     dictHttpCert = {"certificate_lifespan" : "H", "path validation failed" : "L", "OK - Order is valid" : "N"}
+    dictHttpRef = {"Couldn't find any cross-domain scripts" : "N", "Spidering limited to" : "L"}
 
     try: 
         arguments, values = getopt.getopt(argumentList, options, long_options)

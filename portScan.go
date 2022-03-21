@@ -28,7 +28,7 @@ func main() {
 			}
 			conn.Close()
 			if val == knownPorts[j] {
-				knownPorts[j] = "open  unknown"
+				knownPorts[j] = "unknown port"
 			}
 			fmt.Printf("%d/tcp  open  %s\n", j, knownPorts[j])
 		}(i)

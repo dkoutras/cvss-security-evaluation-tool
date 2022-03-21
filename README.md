@@ -4,3 +4,4 @@ pip install -r requirements.txt
 install nmap
 install sslyze
 install go language
+install git bash
