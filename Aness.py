@@ -575,7 +575,7 @@ if __name__ == "__main__":
                     print(httpImpactList)
                     baseEnvScoreCalc(httpImpactList, protocol)
                 elif currentArgument in ("-h", "--help"):
-                    print ("HELP")  
+                    print ("Please read the README.md file !\n install python3\n install pip\npip install -r requirements.txt\ninstall nmap\ninstall sslyze\ninstall go language\ninstall git bash\nexample of usage : python Aness.py -s <ip>  \n//-s for the smtp protocol\n//-f for the ftp protocol\n//-t for the http protocol\n//-a for all the protocols\n//-h for help ") 
             except Exception as e:
                 print(str(e))
                 sys.exit()

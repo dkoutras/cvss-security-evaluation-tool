@@ -23,3 +23,5 @@ example of usage : python Aness.py -s <ip>
 //-a for all the protocols
 
 //-h for help (under construction)
+
+go run portScan.go -ip="ip" 
