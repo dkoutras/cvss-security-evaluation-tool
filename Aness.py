@@ -17,6 +17,8 @@ def protocolCVEListProduction(protocol):
     
     print(serverGrep)
     #error handling in case of closed ports
+    if serverGrep == '': 
+        serverGrep = "gdveqfjqhbfuqej"
     
     serverCvesUrl = 'https://nvd.nist.gov/vuln/search/results?form_type=Advanced&results_type=overview&query=' + serverGrep + '&search_type=all&isCpeNameSearch=false&cvss_version=3'
     
@@ -447,9 +449,9 @@ def parseOutputHttpTxt(dictHttpSsl, dictHttpCert, dictHttpRef, httpFileNames):
     fileCert.close()
     fileRef.close() 
     #handle the N N N with a message 
-    if (readfileSsl == "N" and resultfileCert == "N" and resultfileRef == "N"): 
+    if (resultfileSsl == "N" and resultfileCert == "N" and resultfileRef == "N"): 
         print("\nYour system has no vulnerabilities that are related to Ssl and certificates. So, the system's environmental score may be '0'.\nThis score may be fictitious because your system may be exposed to other attacks not colnsidered in this version of the tool.")
-    httpImpactList = [readfileSsl, resultfileCert, resultfileRef]
+    httpImpactList = [resultfileSsl, resultfileCert, resultfileRef]
     return httpImpactList
 
 if __name__ == "__main__":
@@ -534,7 +536,7 @@ if __name__ == "__main__":
                     securityScore = securityScoreCalc(httpImpactList)
                     print("\nThe impact of the attacks in the Http server is ")
                     print(httpImpactList)
-                    print("\nFtp server security score is ")
+                    print("\nHttp server security score is ")
                     print(securityScore)
                     if securityScore < 0.2:
                         print("\nSecurity is strong")
